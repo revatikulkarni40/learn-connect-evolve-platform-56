@@ -1,159 +1,216 @@
-
 export const featuredVideos = [
   {
-    id: "v1",
-    title: "Introduction to JavaScript Programming",
-    description: "Learn the basics of JavaScript programming in this comprehensive tutorial for beginners.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 1250, // in seconds
-    views: 125000,
-    uploadDate: "Apr 12, 2024",
-    category: "coding"
+    id: "vid1",
+    title: "Introduction to Web Development",
+    description: "Learn the basics of HTML, CSS, and JavaScript in this comprehensive overview of web development fundamentals.",
+    category: "coding",
+    thumbnailUrl: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 542, // seconds
+    views: 145897,
+    uploadDate: "Apr 12, 2023"
   },
   {
-    id: "v2",
-    title: "React Hooks Explained",
-    description: "Dive deep into React hooks with practical examples and advanced techniques.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 1840,
-    views: 89500,
-    uploadDate: "Mar 28, 2024",
-    category: "coding"
-  },
-  {
-    id: "v3",
-    title: "Modern Ballet Techniques",
-    description: "Master the essential techniques of modern ballet with professional dancer Maria Lopez.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 2750,
-    views: 56200,
-    uploadDate: "Apr 5, 2024",
-    category: "dancing"
-  },
-  {
-    id: "v4",
-    title: "Physics for Beginners: Understanding Forces",
-    description: "An introductory course to physics focusing on forces and Newton's laws of motion.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 2140,
-    views: 102300,
-    uploadDate: "Feb 18, 2024",
-    category: "sciences"
-  },
-  {
-    id: "v5",
-    title: "Spanish for Travelers",
-    description: "Learn essential Spanish phrases and vocabulary for your next trip to Spanish-speaking countries.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1596386461350-326ccb383e9f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 1820,
-    views: 75400,
-    uploadDate: "Mar 10, 2024",
-    category: "languages"
-  },
-  {
-    id: "v6",
-    title: "Guitar Basics for Absolute Beginners",
-    description: "Start your musical journey with this step-by-step guide to playing the guitar.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1525201548942-d8732f6617a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 3150,
-    views: 198700,
-    uploadDate: "Jan 25, 2024",
-    category: "music"
-  },
-  {
-    id: "v7",
-    title: "Data Structures & Algorithms",
-    description: "Master the fundamental concepts of data structures and algorithms for technical interviews.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1580894742597-87bc8789db3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 4210,
-    views: 143500,
-    uploadDate: "Mar 22, 2024",
-    category: "coding"
-  },
-  {
-    id: "v8",
-    title: "Hip Hop Dance Tutorial",
-    description: "Learn the basics of hip hop dance with easy-to-follow tutorials for beginners.",
+    id: "vid2",
+    title: "Modern Dance Fundamentals",
+    description: "Master the essential techniques of modern dance with this step-by-step tutorial for beginners and intermediate dancers.",
+    category: "dancing",
     thumbnailUrl: "https://images.unsplash.com/photo-1547153760-18fc86324498?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    duration: 1940,
-    views: 87600,
-    uploadDate: "Apr 2, 2024",
-    category: "dancing"
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 789,
+    views: 98245,
+    uploadDate: "May 3, 2023"
+  },
+  {
+    id: "vid3",
+    title: "Piano Basics: Learn to Play in 30 Days",
+    description: "Start your musical journey with this beginner-friendly piano course designed to get you playing songs within a month.",
+    category: "music",
+    thumbnailUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 673,
+    views: 212546,
+    uploadDate: "Mar 15, 2023"
+  },
+  {
+    id: "vid4",
+    title: "Understanding Quantum Physics Simplified",
+    description: "Explore the fascinating world of quantum physics explained in simple terms with practical examples and visualizations.",
+    category: "sciences",
+    thumbnailUrl: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 892,
+    views: 321654,
+    uploadDate: "Jun 21, 2023"
+  },
+  {
+    id: "vid5",
+    title: "French for Beginners: Essential Phrases",
+    description: "Master essential French phrases and vocabulary for everyday conversations with this beginner-friendly language guide.",
+    category: "languages",
+    thumbnailUrl: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 512,
+    views: 87452,
+    uploadDate: "Feb 8, 2023"
+  },
+  {
+    id: "vid6",
+    title: "30-Minute Full Body HIIT Workout",
+    description: "Transform your fitness with this intense 30-minute high-intensity interval training session designed for all fitness levels.",
+    category: "health",
+    thumbnailUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 1845,
+    views: 543985,
+    uploadDate: "Jan 5, 2023"
+  },
+  {
+    id: "vid7",
+    title: "Advanced JavaScript Techniques",
+    description: "Take your JavaScript skills to the next level with advanced concepts including closures, prototypes, and async patterns.",
+    category: "coding",
+    thumbnailUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 923,
+    views: 267548,
+    uploadDate: "May 18, 2023"
+  },
+  {
+    id: "vid8",
+    title: "React.js for Beginners",
+    description: "Learn to build modern web applications with React.js in this comprehensive course for beginners.",
+    category: "coding",
+    thumbnailUrl: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 1021,
+    views: 189654,
+    uploadDate: "Jul 7, 2023"
+  },
+  {
+    id: "vid9",
+    title: "Data Visualization with D3.js",
+    description: "Master data visualization techniques using D3.js to create interactive and engaging data representations.",
+    category: "coding",
+    thumbnailUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 784,
+    views: 76541,
+    uploadDate: "Aug 14, 2023"
+  },
+  {
+    id: "vid10",
+    title: "Machine Learning Fundamentals",
+    description: "Get started with machine learning concepts and algorithms in this beginner-friendly introduction.",
+    category: "sciences",
+    thumbnailUrl: "https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: 852,
+    views: 243789,
+    uploadDate: "Sep 3, 2023"
   }
 ];
 
 export const featuredEbooks = [
   {
-    id: "e1",
-    title: "Complete Guide to Python Programming",
-    author: "David Johnson",
-    coverUrl: "https://images.unsplash.com/photo-1526379879527-8559ecfd8bf7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "A comprehensive guide to Python programming for beginners and intermediate developers.",
+    id: "eb1",
+    title: "The Complete Guide to JavaScript Programming",
+    author: "Alex Johnson",
+    description: "Master JavaScript from basics to advanced concepts with practical examples and real-world applications.",
     category: "coding",
+    coverUrl: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/javascript-guide.pdf",
+    rating: 4.7
+  },
+  {
+    id: "eb2",
+    title: "Ballet Techniques for Modern Dancers",
+    author: "Sophia Williams",
+    description: "Incorporate classical ballet elements into modern dance with this comprehensive guide for intermediate dancers.",
+    category: "dancing",
+    coverUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/ballet-techniques.pdf",
     rating: 4.8
   },
   {
-    id: "e2",
-    title: "Web Development Bootcamp",
-    author: "Jennifer Smith",
-    coverUrl: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Master HTML, CSS, JavaScript, React, and Node.js in this complete web development guide.",
-    category: "coding",
-    rating: 4.5
-  },
-  {
-    id: "e3",
-    title: "The Art of Classical Music",
-    author: "Robert Chen",
-    coverUrl: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Explore the rich history and theory behind classical music compositions.",
+    id: "eb3",
+    title: "Music Theory: From Beginner to Expert",
+    author: "Michael Chen",
+    description: "A comprehensive exploration of music theory fundamentals through advanced concepts for musicians of all levels.",
     category: "music",
-    rating: 4.7
-  },
-  {
-    id: "e4",
-    title: "Modern Physics Explained",
-    author: "Dr. Sarah Williams",
-    coverUrl: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "A simplified explanation of modern physics concepts for curious minds.",
-    category: "sciences",
+    coverUrl: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/music-theory.pdf",
     rating: 4.6
   },
   {
-    id: "e5",
-    title: "Latin American Dance Styles",
-    author: "Maria Rodriguez",
-    coverUrl: "https://images.unsplash.com/photo-1545959570-a94084071b5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Learn the history, techniques, and cultural significance of Latin American dance styles.",
-    category: "dancing",
+    id: "eb4",
+    title: "The Universe Explained: Astrophysics Fundamentals",
+    author: "Dr. Sarah Miller",
+    description: "Discover the wonders of the cosmos with this accessible guide to astrophysics and cosmic phenomena.",
+    category: "sciences",
+    coverUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/universe-explained.pdf",
     rating: 4.9
   },
   {
-    id: "e6",
-    title: "French Language Mastery",
-    author: "Pierre Dubois",
-    coverUrl: "https://images.unsplash.com/photo-1549737221-bef65e2604a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "A complete guide to mastering the French language from beginner to advanced levels.",
+    id: "eb5",
+    title: "Essential Spanish for Travelers",
+    author: "Carlos Martinez",
+    description: "Learn key Spanish phrases and cultural tips for a successful and enjoyable travel experience in Spanish-speaking countries.",
     category: "languages",
-    rating: 4.4
+    coverUrl: "https://images.unsplash.com/photo-1490633874781-1c63cc424610?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/spanish-for-travelers.pdf",
+    rating: 4.5
   },
   {
-    id: "e7",
-    title: "Machine Learning Fundamentals",
-    author: "James Wilson",
-    coverUrl: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Learn the core concepts of machine learning algorithms and their applications.",
-    category: "coding",
+    id: "eb6",
+    title: "Nutrition Science: A Comprehensive Guide",
+    author: "Dr. Emily Johnson",
+    description: "Understand the science behind nutrition and develop healthy eating habits with evidence-based recommendations.",
+    category: "health",
+    coverUrl: "https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/nutrition-science.pdf",
     rating: 4.7
   },
   {
-    id: "e8",
-    title: "Understanding Quantum Mechanics",
-    author: "Dr. Michael Chang",
-    coverUrl: "https://images.unsplash.com/photo-1492962827063-e5ea0d8c01f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "A beginner-friendly introduction to the fascinating world of quantum mechanics.",
-    category: "sciences",
+    id: "eb7",
+    title: "Full-Stack Web Development",
+    author: "David Smith",
+    description: "Master both frontend and backend web development with modern frameworks and best practices.",
+    category: "coding",
+    coverUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/fullstack-dev.pdf",
+    rating: 4.8
+  },
+  {
+    id: "eb8",
+    title: "Python for Data Science",
+    author: "Laura Peterson",
+    description: "Learn to use Python for data analysis, visualization, and machine learning with practical examples.",
+    category: "coding",
+    coverUrl: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/python-datascience.pdf",
+    rating: 4.6
+  },
+  {
+    id: "eb9",
+    title: "Mobile App Design Fundamentals",
+    author: "James Wilson",
+    description: "Create engaging and user-friendly mobile applications with essential design principles and UI/UX concepts.",
+    category: "coding",
+    coverUrl: "https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/mobile-design.pdf",
     rating: 4.5
+  },
+  {
+    id: "eb10",
+    title: "The Art of Digital Photography",
+    author: "Rebecca Thomas",
+    description: "Master digital photography techniques from composition to editing with this comprehensive visual guide.",
+    category: "sciences",
+    coverUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    fileUrl: "/ebooks/digital-photography.pdf",
+    rating: 4.9
   }
 ];
 
