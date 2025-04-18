@@ -16,7 +16,7 @@ const HeroSection = () => {
       <div className="container-custom relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
-            Welcome to <span className="text-education-secondary">SHIKSHA-SETU</span>
+            <span className="text-education-secondary">SHIKSHA-SETU</span>
           </h1>
           <p className="text-lg md:text-xl text-white/80 mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             Empowering education through technology. Join us on a journey of knowledge and growth.
