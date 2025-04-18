@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +18,13 @@ const langCodeMap: { [key: string]: string } = {
   hi: "hi-IN",
   kn: "kn-IN",
   mr: "mr-IN"
+};
+
+// Fallback language codes for when primary language isn't available
+const fallbackLangCodes: { [key: string]: string[] } = {
+  "hi-IN": ["en-IN", "en-US"],  // Fallback to Indian English, then US English
+  "kn-IN": ["en-IN", "en-US"],  // Fallback to Indian English, then US English
+  "mr-IN": ["en-IN", "en-US"]   // Fallback to Indian English, then US English
 };
 
 const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProps) => {
@@ -66,6 +74,53 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     };
   }, [speechUtterance]);
 
+  // Get best available voice for a language with fallbacks
+  const getBestVoiceForLanguage = (langCode: string, voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
+    // Try exact match first
+    let matchingVoice = voices.find(voice => voice.lang === langCode);
+    if (matchingVoice) {
+      console.log(`Found exact match voice: ${matchingVoice.name}, Lang: ${matchingVoice.lang}`);
+      return matchingVoice;
+    }
+    
+    // Try language base (e.g. "hi" for "hi-IN")
+    const langBase = langCode.split("-")[0];
+    matchingVoice = voices.find(voice => voice.lang.startsWith(langBase));
+    if (matchingVoice) {
+      console.log(`Found language base match voice: ${matchingVoice.name}, Lang: ${matchingVoice.lang}`);
+      return matchingVoice;
+    }
+    
+    // Try fallbacks if available
+    const fallbacks = fallbackLangCodes[langCode];
+    if (fallbacks) {
+      for (const fallbackCode of fallbacks) {
+        matchingVoice = voices.find(voice => voice.lang === fallbackCode);
+        if (matchingVoice) {
+          console.log(`Found fallback voice: ${matchingVoice.name}, Lang: ${matchingVoice.lang}`);
+          toast({
+            title: "Voice Fallback",
+            description: `No ${langCode} voice available, using ${matchingVoice.lang} voice instead.`
+          });
+          return matchingVoice;
+        }
+      }
+    }
+    
+    // Last resort: English (US)
+    matchingVoice = voices.find(voice => voice.lang === 'en-US');
+    if (matchingVoice) {
+      console.log(`Using default en-US voice: ${matchingVoice.name}`);
+      toast({
+        title: "Voice Fallback",
+        description: `No ${langCode} voice available, using English voice instead.`
+      });
+      return matchingVoice;
+    }
+    
+    return null;
+  };
+
   // Handle speak button click with proper language selection
   const handleSpeak = () => {
     // If already speaking, stop
@@ -84,10 +139,22 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     
     console.log(`Speaking in language: ${speechLang}, text: ${textToRead.substring(0, 30)}...`);
 
-    // Force voice list update if needed
-    if (window.speechSynthesis.getVoices().length === 0) {
-      // Wait a bit for voices to load
-      setTimeout(() => speakText(textToRead, speechLang), 100);
+    // Ensure we have voices before trying to speak
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      // Wait for voices to load if they're not available yet
+      window.speechSynthesis.onvoiceschanged = () => {
+        const updatedVoices = window.speechSynthesis.getVoices();
+        if (updatedVoices.length > 0) {
+          speakText(textToRead, speechLang);
+        } else {
+          toast({
+            title: "Speech Error",
+            description: "No voices available for text-to-speech. Please try again later.",
+            variant: "destructive"
+          });
+        }
+      };
     } else {
       speakText(textToRead, speechLang);
     }
@@ -109,20 +176,15 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
       // Get all available voices
       const voices = window.speechSynthesis.getVoices();
       console.log(`Available voices: ${voices.length}`);
-      voices.forEach(voice => {
-        console.log(`Voice: ${voice.name}, Lang: ${voice.lang}`);
-      });
       
-      // Try to find a voice that matches our language code
-      const matchingVoice = voices.find(voice => 
-        voice.lang.startsWith(langCode.split("-")[0])
-      );
+      // Find the best voice for our language
+      const bestVoice = getBestVoiceForLanguage(langCode, voices);
       
-      if (matchingVoice) {
-        console.log(`Selected voice: ${matchingVoice.name}, Lang: ${matchingVoice.lang}`);
-        utterance.voice = matchingVoice;
+      if (bestVoice) {
+        console.log(`Selected voice: ${bestVoice.name}, Lang: ${bestVoice.lang}`);
+        utterance.voice = bestVoice;
       } else {
-        console.log(`No matching voice found for ${langCode}`);
+        console.log(`No suitable voice found for ${langCode}, using default voice`);
       }
       
       // Set speech rate slightly slower for non-English languages
@@ -148,9 +210,24 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
         setSpeechUtterance(null);
         toast({
           title: "Speech Error",
-          description: `Unable to play speech. Please try again later.`,
+          description: "Unable to play speech. Trying with English voice instead.",
           variant: "destructive"
         });
+        
+        // If speech fails with the selected language, try with English
+        if (langCode !== "en-US" && event.error !== "canceled") {
+          setTimeout(() => {
+            const englishUtterance = new SpeechSynthesisUtterance(text);
+            englishUtterance.lang = "en-US";
+            const englishVoice = voices.find(voice => voice.lang === "en-US");
+            if (englishVoice) {
+              englishUtterance.voice = englishVoice;
+            }
+            window.speechSynthesis.speak(englishUtterance);
+            setIsSpeaking(true);
+            setSpeechUtterance(englishUtterance);
+          }, 500);
+        }
       };
       
       // Start speaking
