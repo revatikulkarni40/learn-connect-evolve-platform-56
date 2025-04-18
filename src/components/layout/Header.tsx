@@ -9,7 +9,7 @@ import {
   Search, 
   Sun, 
   Moon,
-  User
+  LogIn
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "@/components/language/LanguageSelector";
@@ -56,22 +56,15 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
           <nav className="hidden md:flex items-center space-x-6">
             <Link 
               to="/login" 
-              className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors animate-fade-in"
+              className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors animate-fade-in flex items-center gap-2"
             >
+              <LogIn size={18} />
               Login
             </Link>
           </nav>
 
-          {/* Search, Language Selector and Theme Toggle */}
+          {/* Theme Toggle and Language Selector */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <Input
-                type="text"
-                placeholder="Search..."
-                className="pl-10 pr-4 py-2 rounded-full w-60"
-              />
-            </div>
             <LanguageSelector />
             <Button 
               variant="ghost" 
@@ -108,21 +101,13 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 animate-fade-in">
-            <div className="flex items-center mb-4">
-              <Search className="text-gray-400 mr-2" size={18} />
-              <Input
-                type="text"
-                placeholder="Search..."
-                className="w-full"
-              />
-            </div>
             <nav className="flex flex-col space-y-4">
               <Link 
                 to="/login" 
                 className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 animate-fade-in"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <User size={20} />
+                <LogIn size={20} />
                 <span>Login</span>
               </Link>
             </nav>
