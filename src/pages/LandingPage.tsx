@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
-import { GraduationCap, BookOpen, Users, ArrowRight, LogIn } from "lucide-react";
+import { GraduationCap, BookOpen, Users, LogIn } from "lucide-react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const LandingPage = () => {
       <main className="container mx-auto px-4 py-16">
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 animate-fade-in">
-            SHIKSHA-SETU
+            Welcome to <span className="text-purple-600">SHIKSHA-SETU</span>
           </h2>
           <p className="text-xl text-gray-600 mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             Connect with personalized learning paths and discover your true potential
