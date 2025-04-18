@@ -46,57 +46,50 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     performTranslation();
   }, [language, originalText, activeTab, translate, toast, t]);
 
-  // Handle speak button click
-  const handleSpeak = () => {
+  // Handle speak button click - Updated to use the correct language for speech
+  const handleSpeak = async () => {
+    // Get the text to read based on current tab
     const textToRead = activeTab === "original" ? originalText : translatedText || originalText;
+    // Get the language to use for speech
+    const speechLang = activeTab === "translated" ? language : "en";
     
+    // If already speaking, stop
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
     } 
     
+    // Set speaking state to show UI indicator
     setIsSpeaking(true);
     
-    // Create speech utterance and handle events
-    const utterance = new SpeechSynthesisUtterance(textToRead);
-    
-    // Set language based on active tab and selected language
-    if (activeTab === "translated") {
-      switch (language) {
-        case "hi":
-          utterance.lang = "hi-IN";
-          break;
-        case "kn":
-          utterance.lang = "kn-IN";
-          break;
-        case "mr":
-          utterance.lang = "mr-IN";
-          break;
-        default:
-          utterance.lang = "en-US";
-      }
-    } else {
-      utterance.lang = "en-US"; // Original is always in English
-    }
-    
-    // Handle speech end
-    utterance.onend = () => {
-      setIsSpeaking(false);
-    };
-    
-    // Handle speech errors
-    utterance.onerror = (event) => {
-      console.error("Speech error:", event);
+    try {
+      // The textToSpeech function in LanguageContext now handles language selection
+      await textToSpeech(textToRead, speechLang);
+      
+      // Setup event listeners for speech synthesis
+      const checkSpeechStatus = () => {
+        if (window.speechSynthesis.speaking) {
+          // Still speaking, check again in a moment
+          setTimeout(checkSpeechStatus, 100);
+        } else {
+          // Speech has ended
+          setIsSpeaking(false);
+        }
+      };
+      
+      // Start checking status after a small delay to ensure synthesis has started
+      setTimeout(checkSpeechStatus, 500);
+      
+    } catch (error) {
+      console.error("Speech error:", error);
       setIsSpeaking(false);
       toast({
         title: "Speech Error",
         description: "Unable to play speech. Please try again later.",
         variant: "destructive"
       });
-    };
-    
-    window.speechSynthesis.speak(utterance);
+    }
   };
 
   // Handle refresh translation

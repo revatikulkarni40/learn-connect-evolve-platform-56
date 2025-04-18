@@ -24,6 +24,11 @@ const LanguageSelector = ({ variant = "default" }: LanguageSelectorProps) => {
   // Find the current language name
   const currentLanguage = languages.find(lang => lang.code === language)?.name || "English";
 
+  // Get language flag/code display
+  const getLanguageIndicator = (code: string) => {
+    return code.toUpperCase();
+  };
+
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
@@ -41,25 +46,32 @@ const LanguageSelector = ({ variant = "default" }: LanguageSelectorProps) => {
               </Badge>
             </>
           )}
+          {variant === "minimal" && (
+            <span className="w-5 h-5 flex items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+              {getLanguageIndicator(language)}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {languages.map((lang) => (
           <DropdownMenuItem 
             key={lang.code}
-            className={`cursor-pointer ${language === lang.code ? "bg-accent font-medium" : ""}`}
+            className={`cursor-pointer flex items-center ${language === lang.code ? "bg-accent font-medium" : ""}`}
             onClick={() => {
               setLanguage(lang.code);
               setIsOpen(false);
             }}
           >
-            <div className="flex items-center">
-              <span className="w-5 h-5 inline-flex items-center justify-center mr-2 rounded-full overflow-hidden bg-gray-100">
-                {lang.code.toUpperCase()}
-              </span>
-              {lang.name}
+            <div className="flex items-center w-full justify-between">
+              <div className="flex items-center">
+                <span className="w-6 h-6 inline-flex items-center justify-center mr-2 rounded-full overflow-hidden bg-gray-100 text-xs font-medium">
+                  {getLanguageIndicator(lang.code)}
+                </span>
+                {lang.name}
+              </div>
               {language === lang.code && (
-                <span className="ml-2 h-1.5 w-1.5 rounded-full bg-primary"></span>
+                <span className="h-2 w-2 rounded-full bg-primary ml-2"></span>
               )}
             </div>
           </DropdownMenuItem>
