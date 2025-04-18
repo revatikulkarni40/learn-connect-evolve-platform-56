@@ -12,6 +12,14 @@ interface TranslationPanelProps {
   type?: "video" | "ebook" | "article";
 }
 
+// Language code mapping for speech synthesis
+const langCodeMap: { [key: string]: string } = {
+  en: "en-US",
+  hi: "hi-IN",
+  kn: "kn-IN",
+  mr: "mr-IN"
+};
+
 const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProps) => {
   const { language, translate, textToSpeech } = useLanguage();
   const { t } = useTranslation();
@@ -46,44 +54,55 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     performTranslation();
   }, [language, originalText, activeTab, translate, toast, t]);
 
-  // Handle speak button click - Updated to use the correct language for speech
+  // Handle speak button click with proper language selection
   const handleSpeak = async () => {
     // Get the text to read based on current tab
     const textToRead = activeTab === "original" ? originalText : translatedText || originalText;
     
-    // Get the language to use for speech - critical fix: use the selected language for the selected tab
-    const speechLang = activeTab === "original" ? "en" : language;
+    // Get the language code based on the active tab and selected language
+    const speechLang = activeTab === "original" ? langCodeMap["en"] : langCodeMap[language];
     
     // If already speaking, stop
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
-    } 
-    
-    // Set speaking state to show UI indicator
+    }
+
     setIsSpeaking(true);
-    
+
     try {
-      console.log(`Speaking in language: ${speechLang}, text: ${textToRead.substring(0, 30)}...`);
+      // Get available voices
+      const voices = window.speechSynthesis.getVoices();
+      const utterance = new SpeechSynthesisUtterance(textToRead);
       
-      // The textToSpeech function in LanguageContext now handles language selection
-      await textToSpeech(textToRead, speechLang);
+      // Set the language for speech
+      utterance.lang = speechLang;
       
-      // Setup event listeners for speech synthesis
-      const checkSpeechStatus = () => {
-        if (window.speechSynthesis.speaking) {
-          // Still speaking, check again in a moment
-          setTimeout(checkSpeechStatus, 100);
-        } else {
-          // Speech has ended
-          setIsSpeaking(false);
-        }
+      // Try to find a voice for the selected language
+      const voiceForLang = voices.find(voice => voice.lang.startsWith(speechLang.split("-")[0]));
+      if (voiceForLang) {
+        utterance.voice = voiceForLang;
+      }
+
+      // Add event handlers
+      utterance.onend = () => {
+        setIsSpeaking(false);
       };
-      
-      // Start checking status after a small delay to ensure synthesis has started
-      setTimeout(checkSpeechStatus, 500);
-      
+
+      utterance.onerror = (event) => {
+        console.error("Speech error:", event);
+        setIsSpeaking(false);
+        toast({
+          title: "Speech Error",
+          description: `Unable to play speech in ${language}. Please try again later.`,
+          variant: "destructive"
+        });
+      };
+
+      // Start speaking
+      window.speechSynthesis.speak(utterance);
+
     } catch (error) {
       console.error("Speech error:", error);
       setIsSpeaking(false);
