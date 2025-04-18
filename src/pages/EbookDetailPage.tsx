@@ -9,12 +9,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Book, BookOpen, Download, Star, User, Calendar, Clock } from "lucide-react";
 import { featuredEbooks } from "@/data/featured";
 import { categories } from "@/data/categories";
+import TranslationPanel from "@/components/language/TranslationPanel";
+import { useTranslation } from "react-i18next";
 
 const EbookDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [ebook, setEbook] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const { t } = useTranslation();
 
   // Mock reviews for the demo
   const reviews = [
@@ -214,6 +217,12 @@ const EbookDetailPage = () => {
                   Whether you're a beginner looking to get started or an experienced practitioner seeking to refresh your knowledge, this e-book offers valuable insights and practical examples you can apply immediately.
                 </p>
               </div>
+              
+              {/* Translation Panel for Ebook Preview */}
+              <TranslationPanel 
+                originalText={`This is a sample preview from the e-book "${ebook.title}" by ${ebook.author}.\n\n${ebook.description}\n\nChapter 1: Introduction\n\nThis chapter introduces the fundamental concepts that will be covered throughout this book. By understanding these basic principles, you'll be equipped with the knowledge foundation necessary to grasp more advanced topics in later chapters.`} 
+                type="ebook" 
+              />
             </div>
           </div>
           

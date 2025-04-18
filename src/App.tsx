@@ -12,27 +12,30 @@ import EbookDetailPage from "./pages/EbookDetailPage";
 import ArticlesPage from "./pages/ArticlesPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/videos" element={<VideosPage />} />
-          <Route path="/videos/:id" element={<VideoPage />} />
-          <Route path="/ebooks" element={<EbooksPage />} />
-          <Route path="/ebooks/:id" element={<EbookDetailPage />} />
-          <Route path="/articles" element={<ArticlesPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <LanguageProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/videos" element={<VideosPage />} />
+            <Route path="/videos/:id" element={<VideoPage />} />
+            <Route path="/ebooks" element={<EbooksPage />} />
+            <Route path="/ebooks/:id" element={<EbookDetailPage />} />
+            <Route path="/articles" element={<ArticlesPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 

@@ -4,12 +4,14 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import VideoCard from "@/components/cards/VideoCard";
+import TranslationPanel from "@/components/language/TranslationPanel";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { featuredVideos } from "@/data/featured";
 import { ThumbsUp, MessageSquare, Share2, Bookmark, Clock, Eye } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const VideoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,7 @@ const VideoPage = () => {
   const [video, setVideo] = useState<any | null>(null);
   const [relatedVideos, setRelatedVideos] = useState<any[]>([]);
   const [comment, setComment] = useState("");
+  const { t } = useTranslation();
 
   // Mock comments for the demo
   const [comments, setComments] = useState([
@@ -194,6 +197,12 @@ const VideoPage = () => {
                     {video.description}
                   </p>
                 </div>
+                
+                {/* Translation Panel for Video Script */}
+                <TranslationPanel 
+                  originalText={`This is a sample transcript for the video "${video.title}".\n\nIn this video, we will explore ${video.description}\n\nThe content is structured to help you understand the concepts clearly and apply them practically.`} 
+                  type="video" 
+                />
                 
                 {/* Comments Section */}
                 <div className="mt-8">

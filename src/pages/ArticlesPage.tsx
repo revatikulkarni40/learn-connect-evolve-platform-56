@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { featuredArticles } from "@/data/featured";
+import { useTranslation } from "react-i18next";
 
 const ArticlesPage = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);

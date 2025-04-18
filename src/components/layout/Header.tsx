@@ -14,6 +14,8 @@ import {
   FileText, 
   Phone
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "@/components/language/LanguageSelector";
 
 interface HeaderProps {
   isDarkMode: boolean;
@@ -23,6 +25,7 @@ interface HeaderProps {
 const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useTranslation();
 
   const handleScroll = () => {
     setIsScrolled(window.scrollY > 10);
@@ -55,23 +58,23 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              Home
+              {t("welcome")}
             </Link>
             <Link to="/videos" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              Videos
+              {t("videos")}
             </Link>
             <Link to="/ebooks" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              E-Books
+              {t("ebooks")}
             </Link>
             <Link to="/articles" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              Articles
+              {t("articles")}
             </Link>
             <Link to="/contact" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              Contact
+              {t("contact")}
             </Link>
           </nav>
 
-          {/* Search and Theme Toggle */}
+          {/* Search, Language Selector and Theme Toggle */}
           <div className="hidden md:flex items-center space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -81,6 +84,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 className="pl-10 pr-4 py-2 rounded-full w-60"
               />
             </div>
+            <LanguageSelector />
             <Button 
               variant="ghost" 
               size="icon" 
@@ -93,6 +97,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden space-x-4">
+            <LanguageSelector variant="minimal" />
             <Button 
               variant="ghost" 
               size="icon" 
@@ -130,7 +135,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <BookOpen size={20} />
-                <span>Home</span>
+                <span>{t("welcome")}</span>
               </Link>
               <Link 
                 to="/videos" 
@@ -138,7 +143,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Video size={20} />
-                <span>Videos</span>
+                <span>{t("videos")}</span>
               </Link>
               <Link 
                 to="/ebooks" 
@@ -146,7 +151,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <BookOpen size={20} />
-                <span>E-Books</span>
+                <span>{t("ebooks")}</span>
               </Link>
               <Link 
                 to="/articles" 
@@ -154,7 +159,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <FileText size={20} />
-                <span>Articles</span>
+                <span>{t("articles")}</span>
               </Link>
               <Link 
                 to="/contact" 
@@ -162,7 +167,7 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Phone size={20} />
-                <span>Contact</span>
+                <span>{t("contact")}</span>
               </Link>
             </nav>
           </div>
