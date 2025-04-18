@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { BookOpen, Code, Flask, Palette, Calculator, Globe } from "lucide-react";
+import { BookOpen, Code, FlaskConical, Palette, Calculator, Globe } from "lucide-react";
 
 const interests = [
   { id: "programming", label: "Programming", icon: Code },
-  { id: "science", label: "Science", icon: Flask },
+  { id: "science", label: "Science", icon: FlaskConical },
   { id: "arts", label: "Arts & Design", icon: Palette },
   { id: "mathematics", label: "Mathematics", icon: Calculator },
   { id: "literature", label: "Literature", icon: BookOpen },
