@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, Volume2, RefreshCw, ExternalLink } from "lucide-react";
+import { Mic, Volume2, RefreshCw, ExternalLink, VolumeX } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/hooks/use-toast";
 
 interface TranslationPanelProps {
   originalText: string;
@@ -14,11 +15,13 @@ interface TranslationPanelProps {
 const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProps) => {
   const { language, translate, textToSpeech } = useLanguage();
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [translatedText, setTranslatedText] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("original");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Translate text whenever language changes
+  // Translate text whenever language or tab changes
   useEffect(() => {
     const performTranslation = async () => {
       if (language !== "en" && originalText && activeTab === "translated") {
@@ -28,6 +31,11 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
           setTranslatedText(translated);
         } catch (error) {
           console.error("Translation error:", error);
+          toast({
+            title: t("Translation Error"),
+            description: t("Unable to translate the content. Please try again later."),
+            variant: "destructive"
+          });
         } finally {
           setIsTranslating(false);
         }
@@ -35,11 +43,58 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     };
 
     performTranslation();
-  }, [language, originalText, activeTab, translate]);
+  }, [language, originalText, activeTab, translate, toast, t]);
 
   // Handle speak button click
-  const handleSpeak = (text: string) => {
-    textToSpeech(text, language);
+  const handleSpeak = () => {
+    const textToRead = activeTab === "original" ? originalText : translatedText || originalText;
+    
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      setIsSpeaking(true);
+      
+      // Create speech utterance and handle events
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      
+      // Set language based on active tab and selected language
+      if (activeTab === "translated") {
+        switch (language) {
+          case "hi":
+            utterance.lang = "hi-IN";
+            break;
+          case "kn":
+            utterance.lang = "kn-IN";
+            break;
+          case "mr":
+            utterance.lang = "mr-IN";
+            break;
+          default:
+            utterance.lang = "en-US";
+        }
+      } else {
+        utterance.lang = "en-US"; // Original is always in English
+      }
+      
+      // Handle speech end
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+      
+      // Handle speech errors
+      utterance.onerror = (event) => {
+        console.error("Speech error:", event);
+        setIsSpeaking(false);
+        toast({
+          title: t("Speech Error"),
+          description: t("Unable to play speech. Please try again later."),
+          variant: "destructive"
+        });
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   // Handle refresh translation
@@ -48,8 +103,17 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     try {
       const translated = await translate(originalText);
       setTranslatedText(translated);
+      toast({
+        title: t("Translation Updated"),
+        description: t("Content has been re-translated successfully.")
+      });
     } catch (error) {
       console.error("Translation error:", error);
+      toast({
+        title: t("Translation Error"),
+        description: t("Unable to translate the content. Please try again later."),
+        variant: "destructive"
+      });
     } finally {
       setIsTranslating(false);
     }
@@ -69,8 +133,17 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     }
   };
 
+  useEffect(() => {
+    // Cleanup on unmount
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   return (
-    <div className="mt-6 border rounded-lg overflow-hidden">
+    <div className="mt-6 border rounded-lg overflow-hidden shadow-sm">
       <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 flex items-center justify-between">
         <h3 className="font-medium">{getTitle()}</h3>
         <div className="flex items-center gap-2">
@@ -86,12 +159,19 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
             </Button>
           )}
           <Button 
-            variant="ghost" 
+            variant={isSpeaking ? "secondary" : "ghost"}
             size="sm" 
-            onClick={() => handleSpeak(activeTab === "original" ? originalText : translatedText)}
-            title={t("Listen")}
+            onClick={handleSpeak}
+            title={isSpeaking ? t("Stop") : t("Listen")}
+            className="relative"
           >
-            <Volume2 size={16} />
+            {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            {isSpeaking && (
+              <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+            )}
           </Button>
         </div>
       </div>

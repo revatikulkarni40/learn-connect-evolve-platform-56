@@ -10,6 +10,7 @@ import {
 import { Globe } from "lucide-react";
 import { useLanguage, languages } from "@/contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 
 interface LanguageSelectorProps {
   variant?: "default" | "minimal";
@@ -29,10 +30,17 @@ const LanguageSelector = ({ variant = "default" }: LanguageSelectorProps) => {
         <Button 
           variant={variant === "minimal" ? "ghost" : "outline"} 
           size="sm" 
-          className="flex items-center gap-1"
+          className="flex items-center gap-1.5"
         >
-          <Globe size={16} />
-          {variant === "default" && <span>{t("language")}: {currentLanguage}</span>}
+          <Globe size={16} className="text-primary" />
+          {variant === "default" && (
+            <>
+              <span className="hidden sm:inline">{t("language")}:</span>
+              <Badge variant="secondary" className="font-medium">
+                {currentLanguage}
+              </Badge>
+            </>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
