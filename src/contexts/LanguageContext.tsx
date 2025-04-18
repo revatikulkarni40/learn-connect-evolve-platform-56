@@ -116,32 +116,58 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     localStorage.setItem("preferredLanguage", language);
   }, [language]);
 
-  // Function to translate text using Google Translate API
+  // Function to translate text using a mock translation service
+  // Instead of relying on Google Translate API which needs a key
   const translate = async (text: string): Promise<string> => {
     if (language === "en") return text; // Return original if English
     
+    // For demo purposes, we'll use a simple mock translation
+    // In a production environment, you would connect to a translation API
     try {
-      // Using the Google Translate API via client-side
-      // In a production environment, this should be done through a backend service
-      const apiKey = "YOUR_GOOGLE_API_KEY"; // This should be secured
-      const response = await fetch(
-        `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            q: text,
-            source: "en",
-            target: language,
-            format: "text"
-          }),
-        }
-      );
+      console.log(`Translating to ${language}: ${text.substring(0, 30)}...`);
       
-      const data = await response.json();
-      return data.data.translations[0].translatedText;
+      // Mock translations for demonstration
+      // These are very basic translations just to show the functionality
+      switch (language) {
+        case "hi":
+          // Simple Hindi mock translation
+          return text.replace(/Chapter/g, "अध्याय")
+                    .replace(/Introduction/g, "परिचय")
+                    .replace(/This is a sample/g, "यह एक नमूना है")
+                    .replace(/preview/g, "पूर्वावलोकन")
+                    .replace(/from the e-book/g, "ई-पुस्तक से")
+                    .replace(/by/g, "द्वारा")
+                    .replace(/This chapter introduces/g, "यह अध्याय परिचय देता है")
+                    .replace(/fundamental concepts/g, "मौलिक अवधारणाओं")
+                    .replace(/A comprehensive exploration/g, "एक व्यापक अन्वेषण");
+                    
+        case "kn":
+          // Simple Kannada mock translation
+          return text.replace(/Chapter/g, "ಅಧ್ಯಾಯ")
+                    .replace(/Introduction/g, "ಪರಿಚಯ")
+                    .replace(/This is a sample/g, "ಇದು ಒಂದು ಮಾದರಿ")
+                    .replace(/preview/g, "ಮುನ್ನೋಟ")
+                    .replace(/from the e-book/g, "ಇ-ಪುಸ್ತಕದಿಂದ")
+                    .replace(/by/g, "ಮೂಲಕ")
+                    .replace(/This chapter introduces/g, "ಈ ಅಧ್ಯಾಯವು ಪರಿಚಯಿಸುತ್ತದೆ")
+                    .replace(/fundamental concepts/g, "ಮೂಲಭೂತ ಪರಿಕಲ್ಪನೆಗಳು")
+                    .replace(/A comprehensive exploration/g, "ಒಂದು ವ್ಯಾಪಕ ಅನ್ವೇಷಣೆ");
+                    
+        case "mr":
+          // Simple Marathi mock translation
+          return text.replace(/Chapter/g, "प्रकरण")
+                    .replace(/Introduction/g, "परिचय")
+                    .replace(/This is a sample/g, "हे एक नमुना आहे")
+                    .replace(/preview/g, "पूर्वावलोकन")
+                    .replace(/from the e-book/g, "ई-पुस्तकातून")
+                    .replace(/by/g, "द्वारे")
+                    .replace(/This chapter introduces/g, "हे प्रकरण परिचय देते")
+                    .replace(/fundamental concepts/g, "मूलभूत संकल्पना")
+                    .replace(/A comprehensive exploration/g, "एक सर्वसमावेशक अन्वेषण");
+                    
+        default:
+          return text;
+      }
     } catch (error) {
       console.error("Translation error:", error);
       return text; // Return original text if translation fails

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, Volume2, RefreshCw, ExternalLink, VolumeX } from "lucide-react";
+import { Volume2, RefreshCw, ExternalLink, VolumeX } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
@@ -28,12 +28,13 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
         setIsTranslating(true);
         try {
           const translated = await translate(originalText);
+          console.log("Translation result:", translated.substring(0, 30) + "...");
           setTranslatedText(translated);
         } catch (error) {
           console.error("Translation error:", error);
           toast({
-            title: t("Translation Error"),
-            description: t("Unable to translate the content. Please try again later."),
+            title: "Translation Error",
+            description: "Unable to translate the content. Please try again later.",
             variant: "destructive"
           });
         } finally {
@@ -52,49 +53,50 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
-    } else {
-      setIsSpeaking(true);
-      
-      // Create speech utterance and handle events
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      
-      // Set language based on active tab and selected language
-      if (activeTab === "translated") {
-        switch (language) {
-          case "hi":
-            utterance.lang = "hi-IN";
-            break;
-          case "kn":
-            utterance.lang = "kn-IN";
-            break;
-          case "mr":
-            utterance.lang = "mr-IN";
-            break;
-          default:
-            utterance.lang = "en-US";
-        }
-      } else {
-        utterance.lang = "en-US"; // Original is always in English
+      return;
+    } 
+    
+    setIsSpeaking(true);
+    
+    // Create speech utterance and handle events
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    
+    // Set language based on active tab and selected language
+    if (activeTab === "translated") {
+      switch (language) {
+        case "hi":
+          utterance.lang = "hi-IN";
+          break;
+        case "kn":
+          utterance.lang = "kn-IN";
+          break;
+        case "mr":
+          utterance.lang = "mr-IN";
+          break;
+        default:
+          utterance.lang = "en-US";
       }
-      
-      // Handle speech end
-      utterance.onend = () => {
-        setIsSpeaking(false);
-      };
-      
-      // Handle speech errors
-      utterance.onerror = (event) => {
-        console.error("Speech error:", event);
-        setIsSpeaking(false);
-        toast({
-          title: t("Speech Error"),
-          description: t("Unable to play speech. Please try again later."),
-          variant: "destructive"
-        });
-      };
-      
-      window.speechSynthesis.speak(utterance);
+    } else {
+      utterance.lang = "en-US"; // Original is always in English
     }
+    
+    // Handle speech end
+    utterance.onend = () => {
+      setIsSpeaking(false);
+    };
+    
+    // Handle speech errors
+    utterance.onerror = (event) => {
+      console.error("Speech error:", event);
+      setIsSpeaking(false);
+      toast({
+        title: "Speech Error",
+        description: "Unable to play speech. Please try again later.",
+        variant: "destructive"
+      });
+    };
+    
+    window.speechSynthesis.speak(utterance);
   };
 
   // Handle refresh translation
@@ -104,14 +106,14 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
       const translated = await translate(originalText);
       setTranslatedText(translated);
       toast({
-        title: t("Translation Updated"),
-        description: t("Content has been re-translated successfully.")
+        title: "Translation Updated",
+        description: "Content has been re-translated successfully."
       });
     } catch (error) {
       console.error("Translation error:", error);
       toast({
-        title: t("Translation Error"),
-        description: t("Unable to translate the content. Please try again later."),
+        title: "Translation Error",
+        description: "Unable to translate the content. Please try again later.",
         variant: "destructive"
       });
     } finally {
@@ -212,14 +214,16 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
 
       <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 text-xs text-gray-500 border-t">
         <div className="flex items-center justify-between">
-          <span>{t("Powered by Google Translate")}</span>
+          <span>{language === "en" ? "Original content" : "Translation service active"}</span>
           <a 
-            href="https://translate.google.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
+            href="#"
             className="flex items-center text-blue-600 hover:underline"
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab(activeTab === "original" ? "translated" : "original");
+            }}
           >
-            {t("Advanced options")}
+            {activeTab === "original" ? t("Show translation") : t("Show original")}
             <ExternalLink size={12} className="ml-1" />
           </a>
         </div>
