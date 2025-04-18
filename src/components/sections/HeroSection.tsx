@@ -15,30 +15,19 @@ const HeroSection = () => {
       <div className="container-custom relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
-            Learn, Connect, Evolve
+            Welcome to <span className="text-education-secondary">SHIKSHA-SETU</span>
           </h1>
-          <p className="text-lg md:text-xl text-white/80 mb-8 animate-fade-in">
-            Discover a world of knowledge with our comprehensive educational platform.
-            Access high-quality videos, e-books, and articles to enhance your learning journey.
+          <p className="text-lg md:text-xl text-white/80 mb-8 animate-fade-in animate-delay-200">
+            Empowering education through technology. Join us on a journey of knowledge and growth.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in">
+          <div className="flex justify-center gap-4 animate-fade-in animate-delay-300">
             <Button 
               size="lg" 
-              className="bg-white text-indigo-700 hover:bg-gray-100"
+              className="bg-white text-indigo-700 hover:bg-gray-100 hover:scale-105 transition-transform duration-300"
               asChild
             >
-              <Link to="/videos">
-                Browse Videos
-              </Link>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white text-white hover:bg-white/10"
-              asChild
-            >
-              <Link to="/ebooks">
-                Explore E-Books
+              <Link to="/login">
+                Get Started
               </Link>
             </Button>
           </div>

@@ -8,11 +8,8 @@ import {
   X, 
   Search, 
   Sun, 
-  Moon, 
-  BookOpen, 
-  Video, 
-  FileText, 
-  Phone
+  Moon,
+  User
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "@/components/language/LanguageSelector";
@@ -50,27 +47,18 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-education-primary dark:text-white">
-              Learn<span className="text-education-secondary">Connect</span>
+            <span className="text-2xl font-bold text-education-primary dark:text-white animate-fade-in">
+              SHIKSHA<span className="text-education-secondary">-SETU</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              {t("welcome")}
-            </Link>
-            <Link to="/videos" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              {t("videos")}
-            </Link>
-            <Link to="/ebooks" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              {t("ebooks")}
-            </Link>
-            <Link to="/articles" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              {t("articles")}
-            </Link>
-            <Link to="/contact" className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors">
-              {t("contact")}
+            <Link 
+              to="/login" 
+              className="font-medium text-gray-700 hover:text-education-primary dark:text-gray-300 dark:hover:text-white transition-colors animate-fade-in"
+            >
+              Login
             </Link>
           </nav>
 
@@ -130,44 +118,12 @@ const Header = ({ isDarkMode, toggleTheme }: HeaderProps) => {
             </div>
             <nav className="flex flex-col space-y-4">
               <Link 
-                to="/" 
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                to="/login" 
+                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 animate-fade-in"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <BookOpen size={20} />
-                <span>{t("welcome")}</span>
-              </Link>
-              <Link 
-                to="/videos" 
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Video size={20} />
-                <span>{t("videos")}</span>
-              </Link>
-              <Link 
-                to="/ebooks" 
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BookOpen size={20} />
-                <span>{t("ebooks")}</span>
-              </Link>
-              <Link 
-                to="/articles" 
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FileText size={20} />
-                <span>{t("articles")}</span>
-              </Link>
-              <Link 
-                to="/contact" 
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Phone size={20} />
-                <span>{t("contact")}</span>
+                <User size={20} />
+                <span>Login</span>
               </Link>
             </nav>
           </div>
