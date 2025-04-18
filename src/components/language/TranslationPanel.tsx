@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,13 +20,14 @@ const langCodeMap: { [key: string]: string } = {
 };
 
 const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProps) => {
-  const { language, translate, textToSpeech } = useLanguage();
+  const { language, translate } = useLanguage();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [translatedText, setTranslatedText] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("original");
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechUtterance, setSpeechUtterance] = useState<SpeechSynthesisUtterance | null>(null);
 
   // Translate text whenever language or tab changes
   useEffect(() => {
@@ -54,55 +54,109 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     performTranslation();
   }, [language, originalText, activeTab, translate, toast, t]);
 
+  // Clean up speech synthesis when component unmounts
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (speechUtterance) {
+        setSpeechUtterance(null);
+      }
+    };
+  }, [speechUtterance]);
+
   // Handle speak button click with proper language selection
-  const handleSpeak = async () => {
+  const handleSpeak = () => {
+    // If already speaking, stop
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setSpeechUtterance(null);
+      return;
+    }
+
     // Get the text to read based on current tab
     const textToRead = activeTab === "original" ? originalText : translatedText || originalText;
     
     // Get the language code based on the active tab and selected language
     const speechLang = activeTab === "original" ? langCodeMap["en"] : langCodeMap[language];
     
-    // If already speaking, stop
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
+    console.log(`Speaking in language: ${speechLang}, text: ${textToRead.substring(0, 30)}...`);
+
+    // Force voice list update if needed
+    if (window.speechSynthesis.getVoices().length === 0) {
+      // Wait a bit for voices to load
+      setTimeout(() => speakText(textToRead, speechLang), 100);
+    } else {
+      speakText(textToRead, speechLang);
     }
+  };
 
-    setIsSpeaking(true);
-
+  const speakText = (text: string, langCode: string) => {
     try {
-      // Get available voices
+      // Make sure any previous speech is stopped
+      window.speechSynthesis.cancel();
+      
+      // Create a new utterance
+      const utterance = new SpeechSynthesisUtterance(text);
+      setSpeechUtterance(utterance);
+      
+      // Set the language
+      utterance.lang = langCode;
+      console.log(`Set utterance language to: ${utterance.lang}`);
+      
+      // Get all available voices
       const voices = window.speechSynthesis.getVoices();
-      const utterance = new SpeechSynthesisUtterance(textToRead);
+      console.log(`Available voices: ${voices.length}`);
+      voices.forEach(voice => {
+        console.log(`Voice: ${voice.name}, Lang: ${voice.lang}`);
+      });
       
-      // Set the language for speech
-      utterance.lang = speechLang;
+      // Try to find a voice that matches our language code
+      const matchingVoice = voices.find(voice => 
+        voice.lang.startsWith(langCode.split("-")[0])
+      );
       
-      // Try to find a voice for the selected language
-      const voiceForLang = voices.find(voice => voice.lang.startsWith(speechLang.split("-")[0]));
-      if (voiceForLang) {
-        utterance.voice = voiceForLang;
+      if (matchingVoice) {
+        console.log(`Selected voice: ${matchingVoice.name}, Lang: ${matchingVoice.lang}`);
+        utterance.voice = matchingVoice;
+      } else {
+        console.log(`No matching voice found for ${langCode}`);
+      }
+      
+      // Set speech rate slightly slower for non-English languages
+      if (langCode !== "en-US") {
+        utterance.rate = 0.9;
       }
 
-      // Add event handlers
-      utterance.onend = () => {
-        setIsSpeaking(false);
+      // Add event listeners
+      utterance.onstart = () => {
+        console.log("Speech started");
+        setIsSpeaking(true);
       };
-
+      
+      utterance.onend = () => {
+        console.log("Speech ended");
+        setIsSpeaking(false);
+        setSpeechUtterance(null);
+      };
+      
       utterance.onerror = (event) => {
         console.error("Speech error:", event);
         setIsSpeaking(false);
+        setSpeechUtterance(null);
         toast({
           title: "Speech Error",
-          description: `Unable to play speech in ${language}. Please try again later.`,
+          description: `Unable to play speech. Please try again later.`,
           variant: "destructive"
         });
       };
-
+      
       // Start speaking
       window.speechSynthesis.speak(utterance);
-
+      setIsSpeaking(true);
+      
     } catch (error) {
       console.error("Speech error:", error);
       setIsSpeaking(false);
@@ -149,15 +203,6 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
         return t("Content");
     }
   };
-
-  useEffect(() => {
-    // Cleanup on unmount
-    return () => {
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
 
   return (
     <div className="mt-6 border rounded-lg overflow-hidden shadow-sm">
