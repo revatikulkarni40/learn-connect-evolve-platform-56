@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
@@ -99,7 +98,7 @@ i18n
           "original": "ಮೂಲ",
           "readMore": "ಇನ್ನಷ್ಟು ಓದಿ",
           "Show translation": "ಅನುವಾದವನ್ನು ತೋರಿಸಿ",
-          "Show original": "ಮೂಲವನ್ನು ತೋರಿಸಿ",
+          "Show original": "ಮೂಲ��ನ್ನು ತೋರಿಸಿ",
           "Video Script": "ವೀಡಿಯೊ ಸ್ಕ್ರಿಪ್ಟ್",
           "Book Content": "ಪುಸ್ತಕದ ವಿಷಯ",
           "Article Content": "ಲೇಖನದ ವಿಷಯ",
@@ -179,7 +178,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
             .replace(/throughout this book/g, "इस पुस्तक में")
             .replace(/By understanding/g, "समझकर")
             .replace(/these basic principles/g, "इन बुनियादी सिद्धांतों को")
-            .replace(/you'll be equipped/g, "आप सुसज्जित होंगे")
+            .replace(/you'll be equipped/g, "आप सुसज्जित ��ोंगे")
             .replace(/with the knowledge/g, "ज्ञान के साथ")
             .replace(/foundation necessary/g, "आवश्यक नींव")
             .replace(/to grasp/g, "समझने के लिए")
@@ -195,7 +194,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
             .replace(/Chapter/g, "ಅಧ್ಯಾಯ")
             .replace(/Introduction/g, "ಪರಿಚಯ")
             .replace(/by/g, "ಮೂಲಕ")
-            .replace(/This chapter introduces/g, "ಈ ಅಧ್ಯಾಯವು ಪರಿಚಯಿಸುತ್ತದೆ")
+            .replace(/This chapter introduces/g, "ಈ ಅಧ್ಯಾಯವು ಪरಿಚಯಿಸುತ್ತದೆ")
             .replace(/fundamental concepts/g, "ಮೂಲಭೂತ ಪರಿಕಲ್ಪನೆಗಳನ್ನು")
             .replace(/comprehensive/g, "ಸಮಗ್ರ")
             .replace(/exploration/g, "ಅನ್ವೇಷಣೆ")
@@ -232,7 +231,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
             .replace(/you'll be equipped/g, "तुम्ही सुसज्ज व्हाल")
             .replace(/with the knowledge/g, "ज्ञानासह")
             .replace(/foundation necessary/g, "आवश्यक पाया")
-            .replace(/to grasp/g, "समजण्यासाठी")
+            .replace(/to grasp/g, "सम���ण्यासाठी")
             .replace(/more advanced topics/g, "अधिक प्रगत विषय")
             .replace(/in later chapters/g, "नंतरच्या प्रकरणांमध्ये");
             
@@ -248,12 +247,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     }
   };
 
-  // Updated text-to-speech function to properly handle language selection
+  // Updated text-to-speech function with fixed language handling
   const textToSpeech = async (text: string, lang: string): Promise<void> => {
     if (!("speechSynthesis" in window)) {
       console.error("Text-to-speech not supported");
-      alert("Your browser does not support text-to-speech functionality.");
-      return;
+      throw new Error("Browser does not support text-to-speech functionality");
     }
     
     // Stop any ongoing speech
@@ -262,7 +260,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     // Create utterance
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Set language based on selection
+    // Set language based on selection with correct language codes
     switch (lang) {
       case "hi":
         utterance.lang = "hi-IN";
@@ -277,24 +275,34 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
         utterance.lang = "en-US";
     }
     
-    // Debug logging for speech synthesis
-    console.log(`Speaking in language: ${utterance.lang}, text: ${text.substring(0, 30)}...`);
-    
-    // Check available voices for better matching
+    // Add event handlers for better error handling
     utterance.onstart = () => {
       console.log("Speech started");
     };
     
     utterance.onerror = (event) => {
       console.error("Speech error:", event);
+      throw event;
     };
     
     utterance.onend = () => {
       console.log("Speech ended");
     };
     
-    // Speak
-    window.speechSynthesis.speak(utterance);
+    // Debug logging for speech synthesis
+    console.log(`Speaking in language: ${utterance.lang}, text: ${text.substring(0, 30)}...`);
+    
+    // Get available voices for debugging
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      // Wait for voices to load if they're not available yet
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.speak(utterance);
+      };
+    } else {
+      // Speak with available voices
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   // Set language function

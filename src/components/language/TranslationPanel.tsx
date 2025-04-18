@@ -50,8 +50,9 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
   const handleSpeak = async () => {
     // Get the text to read based on current tab
     const textToRead = activeTab === "original" ? originalText : translatedText || originalText;
-    // Get the language to use for speech
-    const speechLang = activeTab === "translated" ? language : "en";
+    
+    // Get the language to use for speech - critical fix: use the selected language for the selected tab
+    const speechLang = activeTab === "original" ? "en" : language;
     
     // If already speaking, stop
     if (isSpeaking) {
@@ -64,6 +65,8 @@ const TranslationPanel = ({ originalText, type = "video" }: TranslationPanelProp
     setIsSpeaking(true);
     
     try {
+      console.log(`Speaking in language: ${speechLang}, text: ${textToRead.substring(0, 30)}...`);
+      
       // The textToSpeech function in LanguageContext now handles language selection
       await textToSpeech(textToRead, speechLang);
       
