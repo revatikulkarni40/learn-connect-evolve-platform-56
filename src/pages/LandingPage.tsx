@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { GraduationCap, BookOpen, Users, ArrowRight } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { GraduationCap, BookOpen, Users, ArrowRight, LogIn } from "lucide-react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -12,9 +12,16 @@ const LandingPage = () => {
       <header className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-purple-800">SHIKSH-SETU</h1>
-          <Button variant="outline" onClick={() => navigate("/login")}>
-            Login
-          </Button>
+          <div className="flex gap-4">
+            <Link to="/login" className="text-purple-600 hover:text-purple-800 flex items-center gap-1">
+              <LogIn size={18} />
+              Login
+            </Link>
+            <Link to="/interests" className="text-purple-600 hover:text-purple-800 flex items-center gap-1">
+              <BookOpen size={18} />
+              Choose Interests
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -27,13 +34,23 @@ const LandingPage = () => {
           <p className="text-xl text-gray-600 mb-8">
             Connect with personalized learning paths and discover your true potential
           </p>
-          <Button 
-            size="lg" 
-            onClick={() => navigate("/login")}
-            className="bg-purple-600 hover:bg-purple-700"
-          >
-            Get Started <ArrowRight className="ml-2" />
-          </Button>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button 
+              size="lg" 
+              onClick={() => navigate("/login")}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              Log In <LogIn className="ml-2" />
+            </Button>
+            <Button 
+              size="lg" 
+              onClick={() => navigate("/interests")}
+              variant="outline"
+              className="border-purple-600 text-purple-600 hover:bg-purple-50"
+            >
+              Choose Interests <ArrowRight className="ml-2" />
+            </Button>
+          </div>
         </div>
 
         {/* Features */}

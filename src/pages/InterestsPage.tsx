@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { BookOpen, Code, FlaskConical, Palette, Calculator, Globe } from "lucide-react";
+import { BookOpen, Code, FlaskConical, Palette, Calculator, Globe, Home, LogIn } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 const interests = [
   { id: "programming", label: "Programming", icon: Code },
@@ -16,6 +17,7 @@ const interests = [
 
 const InterestsPage = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const toggleInterest = (id: string) => {
     setSelectedInterests(prev =>
@@ -25,8 +27,33 @@ const InterestsPage = () => {
     );
   };
 
+  const handleContinue = () => {
+    // Navigate to home page after selecting interests
+    navigate("/home");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-4">
+      {/* Navigation Bar */}
+      <div className="container mx-auto max-w-4xl mb-6">
+        <div className="flex justify-between items-center py-4">
+          <Link to="/" className="text-3xl font-bold text-purple-800 flex items-center gap-2">
+            <Home size={24} />
+            SHIKSH-SETU
+          </Link>
+          <div className="flex gap-4">
+            <Link to="/" className="text-purple-600 hover:text-purple-800 flex items-center gap-1">
+              <Home size={18} />
+              Landing Page
+            </Link>
+            <Link to="/login" className="text-purple-600 hover:text-purple-800 flex items-center gap-1">
+              <LogIn size={18} />
+              Login
+            </Link>
+          </div>
+        </div>
+      </div>
+      
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Interests</h1>
@@ -60,6 +87,7 @@ const InterestsPage = () => {
           <Button
             className="bg-purple-600 hover:bg-purple-700"
             disabled={selectedInterests.length === 0}
+            onClick={handleContinue}
           >
             Continue
           </Button>
