@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Home, LogIn } from "lucide-react";
 import { createClient } from '@supabase/supabase-js';
 import { toast } from "sonner";
@@ -12,15 +12,40 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [supabase, setSupabase] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Create Supabase client
-  const supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  useEffect(() => {
+    try {
+      // Check if environment variables are available
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        console.error("Supabase URL or key is missing. Please check your environment variables.");
+        toast.error("Authentication configuration error. Please contact support.");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Initialize Supabase client
+      const client = createClient(supabaseUrl, supabaseKey);
+      setSupabase(client);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to initialize Supabase client:", error);
+      toast.error("Authentication service initialization failed.");
+      setIsLoading(false);
+    }
+  }, []);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabase) {
+      toast.error("Authentication service is not available");
+      return;
+    }
+    
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -40,6 +65,11 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = async () => {
+    if (!supabase) {
+      toast.error("Authentication service is not available");
+      return;
+    }
+    
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -78,6 +108,12 @@ const LoginPage = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">Welcome back</CardTitle>
+            {isLoading && <p className="text-center text-sm text-muted-foreground">Loading authentication service...</p>}
+            {!isLoading && !supabase && (
+              <p className="text-center text-sm text-red-500">
+                Authentication service unavailable. Please check configuration.
+              </p>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleEmailLogin} className="space-y-4">
@@ -88,6 +124,7 @@ const LoginPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading || !supabase}
                 />
               </div>
               <div className="space-y-2">
@@ -97,10 +134,15 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={isLoading || !supabase}
                 />
               </div>
-              <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
-                Sign In with Email
+              <Button 
+                type="submit" 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                disabled={isLoading || !supabase}
+              >
+                {isLoading ? "Loading..." : "Sign In with Email"}
               </Button>
             </form>
             
@@ -120,6 +162,7 @@ const LoginPage = () => {
               variant="outline"
               className="w-full"
               onClick={handleGoogleLogin}
+              disabled={isLoading || !supabase}
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path
@@ -141,6 +184,14 @@ const LoginPage = () => {
               </svg>
               Sign in with Google
             </Button>
+            
+            <div className="text-center text-sm text-muted-foreground">
+              <p className="mt-2">
+                Note: To complete your Supabase configuration, make sure to set your environment variables:
+              </p>
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">VITE_SUPABASE_URL</code> and 
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">VITE_SUPABASE_ANON_KEY</code>
+            </div>
           </CardContent>
         </Card>
       </div>
